@@ -16,6 +16,7 @@ def main( args ):
     parser.add_argument( '-t', '--temperature', dest='temperature', default=False, type=bool )
     parser.add_argument( '-w', '--weather', dest='weather', default=False, type=bool )
     parser.add_argument( '-r', '--rain', dest='rain', default=False, type=bool )
+    parser.add_argument( '-u', '--humidity', dest='humidity', default=False, type=bool )
     
 
     try:
@@ -26,16 +27,10 @@ def main( args ):
         raise
 
     # help message for wrong district
-    help_m = '''[WARNING] <District Error> 
+    help_m_f = '''[WARNING] <District Error> 
 There are some useful district choice :
-{    
-    Taipei  ,
-    Hsinchu ,
-    ...     ,
-    ..      ,
-    .
-}
-        '''
+{'''
+    help_m_b = "}"
 
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -51,30 +46,45 @@ There are some useful district choice :
     ts = (r.text).split('\n')
 
     ## tmp var
-    l1 = ""
+    list_county = []
+    l_tmp = ""
     
     for line in ts:
-        if opt.district in line:
-            l1 = str(line)
-            break
+        l_tmp = str(line)
+        if "CountyID" in l_tmp:
+            list_county.append( ( l_tmp.strip(' 0123456789:') + '}' ).replace('\'', '\"') )
 
+    l1 = ""
+    for county in list_county:
+        if opt.district in county:
+            l1 = county
+
+    # if not find this district
     if l1 == "":
-        print help_m
+        print help_m_f
+        for county in list_county:
+            l1 = county
+            nl = json.loads( l1 )
+            print nl['CountyName']['C'], " ,"
+        print help_m_b
         return
     
-    nl = json.loads( (l1.strip(' 0123456789:') + '}').replace('\'', '\"') )
+    nl = json.loads( l1 )
 
     print     "District    : ", nl['CountyName']['C'], " ", nl['CountyName']['E']
-    if (not opt.temperature) and (not opt.weather) and (not opt.rain) :
+    if (not opt.temperature) and (not opt.weather) and (not opt.rain) and (not opt.humidity) :
         print "Temperature : ", nl['Temperature']['C'], "C ", nl['Temperature']['F'], "F"
         print "Weather     : ", nl['Weather']['C'], " ", nl['Weather']['E']
         print "Rain Rate   : ", nl['Rain']['C'], " ", nl['Rain']['E']
+        print "Humidity    : ", nl['Humidity'], " %"
     elif opt.temperature:
         print "Temperature : ", nl['Temperature']['C'], "C ", nl['Temperature']['F'], "F"
     elif opt.weather:
         print "Weather     : ", nl['Weather']['C'], " ", nl['Weather']['E']
     elif opt.rain:
-        print "Rain Rate   : ", nl['Rain']['C'], " ", nl['Rain']['E']
+        print "Rain (mm)   : ", nl['Rain']['C'], " ", nl['Rain']['E']
+    elif opt.humidity:
+        print "Humidity    : ", nl['Humidity'], " %"
 
 
     print "----- Data from 中央氣象局 -----"
