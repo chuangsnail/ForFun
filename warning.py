@@ -13,7 +13,7 @@ def check():
 		smtp=smtplib.SMTP('smtp.gmail.com', 587)
 		#smtp.ehlo()
 		smtp.starttls()
-		smtp.login('weathersnail@gmail.com','hiimsnail')
+		smtp.login('weathersnail@gmail.com','')
 		from_addr='weathersnail@gmail.com'
 		to_addr="jeff0118252718@gmail.com"
 		msg="Subject:降雨提醒 WeaterSnail天氣蝸牛 關心您\n你好，\n你所在的區域 {} 降雨機率為 {}% (>50%)，出門建議攜帶雨具，在此通知您。\
