@@ -75,7 +75,7 @@ There are some useful district choice :
     if (not opt.temperature) and (not opt.weather) and (not opt.rain) and (not opt.humidity) :
         print "Temperature : ", nl['Temperature']['C'], "C ", nl['Temperature']['F'], "F"
         print "Weather     : ", nl['Weather']['C'], " ", nl['Weather']['E']
-        print "Rain Rate   : ", nl['Rain']['C'], " ", nl['Rain']['E']
+        print "Rain (mm)   : ", nl['Rain']['C'], " ", nl['Rain']['E']
         print "Humidity    : ", nl['Humidity'], " %"
     elif opt.temperature:
         print "Temperature : ", nl['Temperature']['C'], "C ", nl['Temperature']['F'], "F"
